@@ -1,0 +1,238 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Quoridor</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    
+var config = {
+    width: 630,
+    height: 630,
+    type: Phaser.AUTO,
+    parent: 'phaser-example',
+    scene: {
+    	preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var game = new Phaser.Game(config);
+
+var rect;
+var rectangles;
+var graphics;
+var a = 0;
+var pawn1;
+var pawn2;
+var turn1 = 1;
+var wallon = 0;
+var wall_arr = new Array(9);
+for (var i = 0; i < 9; i++)
+{
+	wall_arr[i] = new Array(9).fill(0);
+}
+
+function preload()
+{
+	this.load.image('square', 'assets/board_square.png');
+	this.load.image('pawn', 'assets/pawn.png');
+	this.load.image('wall', 'assets/wall.png');
+}
+
+function create ()
+{
+    // graphics = this.add.graphics({ lineStyle: { width: 2, color: 0x0000aa }, fillStyle: { color: 0xaa0000 }});
+  	var pointer = this.input.activePointer;
+  	this.input.mouse.disableContextMenu();
+    
+    rectangles = [];
+    
+    
+    for(var x = 0; x < 9; x++)
+    {
+        for(var y = 0; y < 9; y++)
+        {
+            let nrect = this.add.image(x * (630/9)+35, y * (630/9)+35, 'square');
+            nrect.setInteractive();
+            nrect.on('pointerdown', () => {move_pawn(nrect.x, nrect.y, pointer.rightButtonDown(), wallon)});
+            //nrect.on('pointerdown', make_move(nrect));
+        }
+    }
+    pawn1 = this.add.sprite(35, 35, 'pawn');
+    pawn1.on('pointerover', () => {console.log('pointerover_pawn1')});
+
+    pawn2 = this.add.sprite(105,105, 'pawn');
+    pawn2.tint = 0xaa0000;
+    var _this = this;
+    this.input.on('pointerdown', function (pointer) {
+        if (pointer.rightButtonDown()){
+        	if(wallon == 0)
+        	{
+        		wallon = 1;
+        	} else if (wallon == 1) {
+        		wallon = 2;
+        	} else if (wallon == 2) {
+        		wallon = 0;
+        	} else {
+        		console.log('Theres a problem with wallon');
+        	}
+        }
+        else 
+        {
+        	var wall_pos = check_wall_placement(pointer.worldX, pointer.worldY);
+        	if(!(wall_pos == null))
+        	{
+        		console.log('wall x: '+wall_pos[0]+'\nwall y: '+wall_pos[1]);
+        		var new_wall = _this.add.sprite(wall_pos[0], wall_pos[1], 'wall');
+        		if(wallon == 2)
+        		{
+        			new_wall.angle = 90;
+        		}
+        	}
+        }
+    });
+    wall = this.add.sprite(0, 0, 'wall');
+}
+
+function update ()
+{
+    var pointer = this.input.activePointer;
+	if (wallon == 0)
+	{
+		wall.setActive(false).setVisible(false);
+	}
+	else if(wallon == 1)
+	{
+		wall.setActive(true).setVisible(true);
+		wall.angle = 0;
+		wall.setX(pointer.worldX);
+		wall.setY(pointer.worldY);
+	} 
+	else if (wallon == 2)
+	{
+		wall.setActive(true).setVisible(true);
+		wall.angle = 90;
+		wall.setX(pointer.worldX);
+		wall.setY(pointer.worldY);
+	}
+    // stroke blue all rectangles NOT containing rect
+    /*
+    graphics.lineStyle(1, 0x0000aa);
+
+    for(var i = 0; i < rectangles.length; i++)
+    {
+        graphics.strokeRectShape(rectangles[i]);
+
+    }*/
+
+
+}
+
+function move_pawn(x, y, point, wallon) {
+	if(!point && wallon == 0){
+		if(turn1 === 1){
+			if(Math.abs(pawn1.x - x) <=70 && Math.abs(pawn1.y - y) <= 70 && Math.abs(pawn1.x - x)+Math.abs(pawn1.y - y) <= 70){
+				pawn1.setX(x);
+				pawn1.setY(y);
+				turn1 = 0;
+			}
+			
+		}
+		else
+		{
+			if(Math.abs(pawn2.x - x) <=70 && Math.abs(pawn2.y - y) <= 70 && Math.abs(pawn2.x - x)+Math.abs(pawn2.y - y) <= 70){
+				pawn2.setX(x);
+				pawn2.setY(y);
+				turn1 = 1;
+			}
+		}
+	}
+}
+
+function print_wall_arr() {
+	var s ="";
+	for(var x = 0; x < wall_arr.length; x++)
+	{
+		
+		console.log(wall_arr[x]);
+	}
+}
+
+function check_wall_placement (old_x, old_y) {
+	//TODO: Make sure to create the right placement conditions
+	var coords = convert_pos_to_wall_arr(old_x, old_y);
+	x = coords[0];
+	y = coords[1];
+
+	if(wallon == 1)
+	{
+		if(wall_arr[x][y] != 2 && !(wall_arr[x+1][y] == 2 || wall_arr[x-1][y] == 2))
+		{
+			
+			return add_wall(x,y);
+		}
+	}
+	else if (wallon == 2)
+	{
+		if(wall_arr[x][y] != 2 && !(wall_arr[x][y+1] = 2 || wall_arr[x][y+1] == 2))
+		{
+			
+			return add_wall(x,y);
+		}
+	}
+}
+
+function convert_pos_to_wall_arr(x, y) {
+	new_x = Math.round(x/70);
+	new_y = Math.round(y/70);
+	/*if (new_x < 1)
+	{
+		new_x = 1;
+	} else if (new_x > 9) {
+		new_x = 9;
+	}
+
+	if (new_y < 9)
+	{
+		new_y = 9;
+	} else if (new_y > 9) {
+		new_y = 9;
+	}*/
+	return [new_x, new_y];
+}
+
+function convert_wall_arr_to_pos(x,y) {
+	new_x = x*70;
+	new_y = y*70;
+	return [new_x, new_y];
+}
+
+function add_wall(x, y) {
+	// TODO: Make sure the walls are put in the right place in the array
+	if (wallon == 1)
+	{
+		wall_arr[x][y] = 2;
+	} else if (wallon == 2)
+	{
+		wall_arr[x][y] = 2;
+	}
+	print_wall_arr();
+	return convert_wall_arr_to_pos(x, y);
+
+}
+
+</script>
+
+</body>
+</html>
