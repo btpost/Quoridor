@@ -53,7 +53,7 @@ var a = 0;
 var pawn1;
 var pawn2;
 var turn = 1;
-var wallon = 0;
+var wall_mode = 0;
 
 // Loading assets
 function preload()
@@ -90,18 +90,18 @@ function create ()
     this.input.on('pointerdown', function (pointer) {
         // Change wall display state on right click
         if (pointer.rightButtonDown()){
-        	if(wallon === 0)
+        	if(wall_mode === 0)
         	{
-        		wallon = 1;
-        	} else if (wallon === 1) {
-        		wallon = 2;
-        	} else if (wallon === 2) {
-        		wallon = 0;
+        		wall_mode = 1;
+        	} else if (wall_mode === 1) {
+        		wall_mode = 2;
+        	} else if (wall_mode === 2) {
+        		wall_mode = 0;
         	} else {
-        		console.log('Theres a problem with wallon');
+        		console.log('Theres a problem with wall_mode');
         	}
         } // Move pawn if not in wall mode
-        else if (wallon === 0)
+        else if (wall_mode === 0)
         {
         	if(turn === 1)
         	{
@@ -120,16 +120,30 @@ function create ()
         } 
         else
         {
+
+        	if(board.check_wall_placement(pointer.worldX, pointer.worldY, wall_mode))
+        	{
+        		board.add_wall(pointer.worldX, pointer.worldY, wall_mode);
+        		var new_x = (Math.round(pointer.worldX/70)*70);
+        		var new_y = (Math.round(pointer.worldY/70)*70);
+        		var new_wall = _this.add.sprite(new_x, new_y, 'wall');
+        		if (wall_mode === 2)
+        		{
+        			new_wall.angle = 90;
+        		}
+        	}
+
+        	/*
         	var wall_pos = check_wall_placement(pointer.worldX, pointer.worldY);
         	if(!(wall_pos == null))
         	{
         		console.log('wall x: '+wall_pos[0]+'\nwall y: '+wall_pos[1]);
         		var new_wall = _this.add.sprite(wall_pos[1], wall_pos[0], 'wall');
-        		if(wallon == 2)
+        		if(wall_mode == 2)
         		{
         			new_wall.angle = 90;
         		}
-        	}
+        	}*/
         }
     });
     wall = this.add.sprite(0, 0, 'wall');
@@ -139,19 +153,19 @@ function update ()
 {
 	// Initialize mouse input
     var pointer = this.input.activePointer;
-	// Change the display of the wall piece based on the wallon value
-	if (wallon == 0)
+	// Change the display of the wall piece based on the wall_mode value
+	if (wall_mode == 0)
 	{
 		wall.setActive(false).setVisible(false);
 	}
-	else if(wallon == 1)
+	else if(wall_mode == 1)
 	{
 		wall.setActive(true).setVisible(true);
 		wall.angle = 0;
 		wall.setX(pointer.worldX);
 		wall.setY(pointer.worldY);
 	} 
-	else if (wallon == 2)
+	else if (wall_mode == 2)
 	{
 		wall.setActive(true).setVisible(true);
 		wall.angle = 90;
@@ -159,34 +173,7 @@ function update ()
 		wall.setY(pointer.worldY);
 	}
 }
-// Move the pawn when a valid space is clicked on the players given turn
-function move_pawn(x, y, point, wallon) {
-	if(!point && wallon == 0){
-		if(turn1 === 1){
-			// Can't move on to a space if the other pawn is there
-			if(!(Math.abs(pawn2.x - x) < 70 && Math.abs(pawn2.y - y) < 70)){
-				// Can only move forward back left right one space
-				if(Math.abs(pawn1.x - x) <=70 && Math.abs(pawn1.y - y) <= 70 && Math.abs(pawn1.x - x)+Math.abs(pawn1.y - y) <= 70){
-					pawn1.setX(x);
-					pawn1.setY(y);
-					turn1 = 0;
-				}
-			}
-			
-		}
-		else
-		{	// Can't move on to a space if the other pawn is there
-			if(!(Math.abs(pawn1.x - x) < 70 && Math.abs(pawn1.y - y) < 70)){
-				// Can only move forward back left right one space
-				if(Math.abs(pawn2.x - x) <=70 && Math.abs(pawn2.y - y) <= 70 && Math.abs(pawn2.x - x)+Math.abs(pawn2.y - y) <= 70){
-					pawn2.setX(x);
-					pawn2.setY(y);
-					turn1 = 1;
-				}
-			}
-		}
-	}
-}
+
 // Print out the array of the wall placement
 function print_wall_arr() {
 	var s ="";
@@ -204,7 +191,7 @@ function check_wall_placement (old_x, old_y) {
 	y = coords[0];
 	x = coords[1];
 
-	if(wallon == 1)
+	if(wall_mode == 1)
 	{
 		if(wall_arr[x][y] != 2 && !(wall_arr[x+1][y] == 2 || wall_arr[x-1][y] == 2))
 		{
@@ -212,7 +199,7 @@ function check_wall_placement (old_x, old_y) {
 			return add_wall(x,y);
 		}
 	}
-	else if (wallon == 2)
+	else if (wall_mode == 2)
 	{
 		if(wall_arr[x][y] != 2 && !(wall_arr[x][y+1] == 2 || wall_arr[x][y-1] == 2))
 		{
@@ -237,12 +224,12 @@ function convert_wall_arr_to_pos(x,y) {
 // Print updated array to console
 function add_wall(x, y) {
 	// TODO: Make sure the walls are put in the right place in the array
-	if (wallon == 1)
+	if (wall_mode == 1)
 	{
 		wall_arr[x][y] = 2;
 		wall_arr[x+1][y] = 1;
 		wall_arr[x-1][y] = 1;
-	} else if (wallon == 2)
+	} else if (wall_mode == 2)
 	{
 		wall_arr[x][y] = 2;
 		wall_arr[x][y+1] = 1;

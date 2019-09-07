@@ -21,9 +21,11 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 		if(Math.abs(new_square.arr_x - this.square.arr_x) <= 1 && Math.abs(new_square.arr_y - this.square.arr_y) <= 1 && 
 					Math.abs(new_square.arr_x - this.square.arr_x)+Math.abs(new_square.arr_y - this.square.arr_y) <= 1)
 		{
-			console.log('within 1 space');
+			console.log(this.square.block_array);
+			
 			if(new_square.y > this.square.y)
 			{
+				console.log(this.square.block_array);
 				if(!(this.square.blocked(0)))
 				{
 					this.square = new_square;
@@ -33,9 +35,11 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
+				console.log('blocked on top');
 			}
 			else if (new_square.y < this.square.y)
 			{
+				console.log(this.square.block_array);
 				if(!(this.square.blocked(1)))
 				{
 					this.square = new_square;
@@ -45,9 +49,11 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
+				console.log('blocked on bottom');
 			}
 			else if (new_square.x < this.square.x)
 			{
+				console.log(this.square.block_array);
 				if(!(this.square.blocked(2)))
 				{
 					this.square = new_square;
@@ -57,9 +63,11 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
+				console.log('blocked on left');
 			}
 			else if (new_square.x > this.square.x)
 			{
+				console.log(this.square.block_array);
 				if(!(this.square.blocked(3)))
 				{
 					this.square = new_square;
@@ -69,6 +77,7 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
+				console.log('blocked on right');
 			}
 			
 		}

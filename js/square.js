@@ -12,20 +12,20 @@ export class Square extends Phaser.GameObjects.Image {
 		config.scene.add.existing(this);
 	}
 	// Methods for blocking each side of the square
-	blockUp() {
+	block_up() {
 		this.blocked_sides[0] = 1;
 	}
-	blockDown() {
+	block_down() {
 		this.blocked_sides[1] = 1;
 	}
-	blockLeft() {
+	block_left() {
 		this.blocked_sides[2] = 1;
 	}
-	blockRight() {
+	block_right() {
 		this.blocked_sides[3] = 1;
 	}
 
-	get blockArray() {
+	get block_array (){
 		return this.blocked_sides;
 	}
 
