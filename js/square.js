@@ -1,3 +1,5 @@
+// Class used to store and access data about the state of each square on the game board
+
 export class Square extends Phaser.GameObjects.Image {
 
 	constructor(config) {

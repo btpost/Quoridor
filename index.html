@@ -30,6 +30,7 @@ import Pawn from './js/pawn.js';
 import Square from './js/square.js';
 import Player from './js/player.js';
 
+// Configure the scene for the game
 var config = {
     width: 630,
     height: 630,
@@ -54,7 +55,7 @@ var pawn1;
 var pawn2;
 var turn = 0;
 var wall_mode = 0;
-var player_num = 2
+var player_num = 2;
 
 // Loading assets
 function preload()
@@ -79,7 +80,7 @@ function create ()
     var pawn2 = new Pawn({scene: this, x: 315, y:595, board: board});
     pawn2.tint = 0xaa0000;
 
-    
+    // Initialize players
 	var player1 = new Player({board: board, pawn: pawn1, wall_count: 10, cpu: false});
 	var player2 = new Player({board: board, pawn: pawn2, wall_count: 10, cpu: false});
     var players = [player1, player2]
@@ -111,13 +112,17 @@ function create ()
         } 
         else
         {
-
+        	// Check to see if a wall can be placed at the clicked on spot
+        	// Make sure the player clicking has walls to play
         	if(board.check_wall_placement(pointer.worldX, pointer.worldY, wall_mode) && players[turn%player_num].wall_count != 0)
         	{
+        		// Add the wall to the board
         		board.add_wall(pointer.worldX, pointer.worldY, wall_mode);
+        		// Draw the wall on the screen
         		var new_x = (Math.round(pointer.worldX/70)*70);
         		var new_y = (Math.round(pointer.worldY/70)*70);
         		var new_wall = _this.add.sprite(new_x, new_y, 'wall');
+        		// If it was placed horizontally, draw it sideways
         		if (wall_mode === 2)
         		{
         			new_wall.angle = 90;
@@ -125,18 +130,6 @@ function create ()
         		players[turn%player_num].wall_count--;
         		turn++; 
         	}
-
-        	/*
-        	var wall_pos = check_wall_placement(pointer.worldX, pointer.worldY);
-        	if(!(wall_pos == null))
-        	{
-        		console.log('wall x: '+wall_pos[0]+'\nwall y: '+wall_pos[1]);
-        		var new_wall = _this.add.sprite(wall_pos[1], wall_pos[0], 'wall');
-        		if(wall_mode == 2)
-        		{
-        			new_wall.angle = 90;
-        		}
-        	}*/
         }
     });
     wall = this.add.sprite(0, 0, 'wall');
@@ -165,72 +158,6 @@ function update ()
 		wall.setX(pointer.worldX);
 		wall.setY(pointer.worldY);
 	}
-}
-
-// Print out the array of the wall placement
-function print_wall_arr() {
-	var s ="";
-	for(var x = 0; x < wall_arr.length; x++)
-	{
-		
-		console.log(wall_arr[x]);
-	}
-}
-// Check to see if the wall can be placed in the place the player clicked. If yes
-// call add_wall to place the wall
-function check_wall_placement (old_x, old_y) {
-	//TODO: Make sure to create the right placement conditions
-	var coords = convert_pos_to_wall_arr(old_x, old_y);
-	y = coords[0];
-	x = coords[1];
-
-	if(wall_mode == 1)
-	{
-		if(wall_arr[x][y] != 2 && !(wall_arr[x+1][y] == 2 || wall_arr[x-1][y] == 2))
-		{
-			
-			return add_wall(x,y);
-		}
-	}
-	else if (wall_mode == 2)
-	{
-		if(wall_arr[x][y] != 2 && !(wall_arr[x][y+1] == 2 || wall_arr[x][y-1] == 2))
-		{
-			console.log('made it 2');
-			return add_wall(x,y);
-		}
-	}
-}
-// Convert mouse pointer coordinates on screen to array indices for the wall array
-function convert_pos_to_wall_arr(x, y) {
-	new_x = Math.round(x/70);
-	new_y = Math.round(y/70);
-	return [new_x, new_y];
-}
-// Convert wall array indices to coordinates on the board
-function convert_wall_arr_to_pos(x,y) {
-	new_x = x*70;
-	new_y = y*70;
-	return [new_x, new_y];
-}
-// Set wall array values to reflect new pieces
-// Print updated array to console
-function add_wall(x, y) {
-	// TODO: Make sure the walls are put in the right place in the array
-	if (wall_mode == 1)
-	{
-		wall_arr[x][y] = 2;
-		wall_arr[x+1][y] = 1;
-		wall_arr[x-1][y] = 1;
-	} else if (wall_mode == 2)
-	{
-		wall_arr[x][y] = 2;
-		wall_arr[x][y+1] = 1;
-		wall_arr[x][y-1] = 1;
-	}
-	print_wall_arr();
-	return convert_wall_arr_to_pos(x, y);
-
 }
 
 </script>

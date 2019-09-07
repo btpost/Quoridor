@@ -1,6 +1,7 @@
 import Board from './board.js'
 import Pawn from './pawn.js'
 
+// Class to keep track of data relevant to each player
 
 export class Player {
 	constructor(config) {

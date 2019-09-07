@@ -1,6 +1,8 @@
 import Square from './square.js'
 import Board from './board.js'
 
+// Class to keep track of pawn movement
+
 export class Pawn extends Phaser.GameObjects.Sprite {
 	constructor(config) {
 		super(config.scene, config.x, config.y, 'pawn');
@@ -12,25 +14,26 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 		config.scene.add.existing(this);
 	}
 
+	// Check to see if a valid space was clicked. If so, move the pawn to the space.
 	move (x, y) {
+		// Convert the input coords to array coords
 		var arr_x = Math.floor(x/70);
 		var arr_y = Math.floor(y/70);
 
-		
-		var new_square = this.board.get_square(arr_x, arr_y);
-		if(Math.abs(new_square.arr_x - this.square.arr_x) <= 1 && Math.abs(new_square.arr_y - this.square.arr_y) <= 1 && 
-					Math.abs(new_square.arr_x - this.square.arr_x)+Math.abs(new_square.arr_y - this.square.arr_y) <= 1)
+		// Check to see if the square clicked is 1 space up, down, left, or right.
+		if(Math.abs(arr_x - this.square.arr_x) <= 1 && Math.abs(arr_y - this.square.arr_y) <= 1 && 
+					Math.abs(arr_x - this.square.arr_x)+Math.abs(arr_y - this.square.arr_y) <= 1)
 		{
-			console.log('Checking for blocked path');
-			console.log(this.square.block_array);
 			
-			if(new_square.y < this.square.y)
-			{
+			// Check to see if the current square is block in the direction of the new square
+			// if it isn't blocked, set the new square to this pawn's current square
 
-				console.log(this.square.block_array);
+			// Checking for moving up
+			if(arr_y < this.square.y)
+			{
 				if(!(this.square.blocked(0)))
 				{
-					console.log('path not blocked (top)');
+					var new_square = this.board.get_square(arr_x, arr_y);
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -38,14 +41,13 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
-				console.log('blocked on top');
 			}
-			else if (new_square.y > this.square.y)
+			// Checking for moving down
+			else if (arr_y > this.square.y)
 			{
-				console.log(this.square.block_array);
 				if(!(this.square.blocked(1)))
 				{
-					console.log('path not blocked (bottom)');
+					var new_square = this.board.get_square(arr_x, arr_y);
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -53,14 +55,13 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
-				console.log('blocked on bottom');
 			}
-			else if (new_square.x < this.square.x)
+			// Checking for moving left
+			else if (arr_x < this.square.x)
 			{
-				console.log(this.square.block_array);
 				if(!(this.square.blocked(2)))
 				{
-					console.log('path not blocked (left)');
+					var new_square = this.board.get_square(arr_x, arr_y);
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -68,14 +69,13 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
-				console.log('blocked on left');
 			}
-			else if (new_square.x > this.square.x)
+			// Checking for moving right
+			else if (arr_x > this.square.x)
 			{
-				console.log(this.square.block_array);
 				if(!(this.square.blocked(3)))
 				{
-					console.log('path not blocked (right)');
+					var new_square = this.board.get_square(arr_x, arr_y);
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -83,35 +83,9 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 					this.y = new_square.y;
 					return true;
 				}
-				console.log('blocked on right');
-			}
-			
+			}	
 		}
-
-		console.log(this.arr_x, this.arr_y);
-		/* Maybe this will be useful one day
-
-		function find_direction (new_square) {
-			if(new_square.y > this.square.y)
-			{
-				return 0;
-			}
-			else if (new_square.y < this.square.y)
-			{
-				return 1;
-			}
-			else if (new_square.x < this.square.x)
-			{
-				return 2;
-			}
-			else if (new_square.x > this.square.x)
-			{
-				return 3;
-			}
-		}*/
 	}
-
-
 }
 
 export default Pawn;

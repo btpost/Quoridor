@@ -1,5 +1,7 @@
 import Square from './square.js';
 
+// Class used to represent the game board. Each square is placed in a 2d array, and when walls are placed, the sides
+// corresponding squares are blocked.
 export class Board {
 	constructor(config) {
 		this.squares = []
@@ -24,6 +26,7 @@ export class Board {
 			console.log(this.squares[i]);
 		}
 	}
+
 	// Takes in x,y coords from clicking the screen
 	// returns true if wall can be placed, false if it cannot be placed
 	check_wall_placement(x, y, wall_mode) {
@@ -41,8 +44,6 @@ export class Board {
 		var t_right = this.squares[y][x+1].block_array;
 		var b_left = this.squares[y+1][x].block_array;
 		var b_right = this.squares[y+1][x+1].block_array;
-
-		console.log(t_left);
 
 		if(wall_mode === 1)
 		{
@@ -75,6 +76,7 @@ export class Board {
 	}
 
 	// Changes the blocking values on the squares on the board
+	// Takes in x,y coords from clicking the screen
 	add_wall(x, y, wall_mode) {
 		x = Math.round(x/70)-1;
 		y = Math.round(y/70)-1;
@@ -90,7 +92,6 @@ export class Board {
 			b_left.block_right();
 			t_right.block_left();
 			b_right.block_left();
-			console.log(t_left.block_array);
 		}
 		else if (wall_mode === 2)
 		{
@@ -98,7 +99,6 @@ export class Board {
 			t_right.block_down();
 			b_left.block_up();
 			b_right.block_up();
-			console.log(t_left.block_array);
 		}
 	}
 }
