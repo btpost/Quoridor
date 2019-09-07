@@ -5,10 +5,10 @@ This is a simple web app that can be used to play the game Quoridor. Information
 
 ### Current Features
 * Pawn Movement
-* Wall Placement Controls
+* Wall Placement
+* Pawn's detect wall collisions
 
 ### TODO
-* Fix wall placement checking
 * Set wall placement limit for each player
 * Check win conditions
 * Snazzy Animations
