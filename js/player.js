@@ -1,7 +1,8 @@
 import Board from './board.js'
 import Pawn from './pawn.js'
 
-class Player {
+
+export class Player {
 	constructor(config) {
 		this.board = config.board;
 		this.pawn = config.pawn;
@@ -13,3 +14,4 @@ class Player {
 		//TODO: finds the possible moves the player can make 
 	}
 }
+export default Player;

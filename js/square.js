@@ -1,15 +1,15 @@
-class Square extends Phaser.GameObjects.Image {
+export class Square extends Phaser.GameObjects.Image {
+
 	constructor(config) {
 		super(config.scene, config.x, config.y, 'square');
 		// Added fields for the array coordinates of the square
-		this.arr_x = convert_to_board_coords(config.x);
-		this.arr_y = convert_to_board_coords(config.y);
+		this.arr_x = Math.floor(config.x/70);
+		this.arr_y = Math.floor(config.y/70);
 		// Add array for keeping track of which sides of the square are blocked
 		this.blocked_sides = new Array(4).fill(0);
 
 		// Add the square to the screen
 		config.scene.add.existing(this);
-		this.setInteractive();
 	}
 	// Methods for blocking each side of the square
 	blockUp() {
@@ -29,9 +29,10 @@ class Square extends Phaser.GameObjects.Image {
 		return this.blocked_sides;
 	}
 
-	convert_to_board_coords(val)
-	{
-		return Math.floor(val/70);
+	blocked (i) {
+		return this.blocked_sides[i];
 	}
 
 }
+
+export default Square;
