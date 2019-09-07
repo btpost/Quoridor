@@ -52,8 +52,9 @@ var graphics;
 var a = 0;
 var pawn1;
 var pawn2;
-var turn = 1;
+var turn = 0;
 var wall_mode = 0;
+var player_num = 2
 
 // Loading assets
 function preload()
@@ -78,10 +79,10 @@ function create ()
     var pawn2 = new Pawn({scene: this, x: 315, y:595, board: board});
     pawn2.tint = 0xaa0000;
 
-    /*
-	player1 = new Player({board: board, pawn: pawn1, wall_count: 10, cpu: false});
-	player2 = new Player({board: board, pawn: pawn2, wall_count: 10, cpu: false});
-    */
+    
+	var player1 = new Player({board: board, pawn: pawn1, wall_count: 10, cpu: false});
+	var player2 = new Player({board: board, pawn: pawn2, wall_count: 10, cpu: false});
+    var players = [player1, player2]
 
     // Create a local variable for the current scene to pass into the event handler below
     var _this = this;
@@ -103,25 +104,15 @@ function create ()
         } // Move pawn if not in wall mode
         else if (wall_mode === 0)
         {
-        	if(turn === 1)
+        	if(players[turn%player_num].pawn.move(pointer.worldX, pointer.worldY))
         	{
-        		if(pawn1.move(pointer.worldX, pointer.worldY))
-        		{
-        			turn = 0;
-        		}
+        		turn++;
         	} 
-        	else if (turn === 0)
-        	{
-        		if(pawn2.move(pointer.worldX, pointer.worldY))
-        		{
-        			turn = 1;
-        		}
-        	}
         } 
         else
         {
 
-        	if(board.check_wall_placement(pointer.worldX, pointer.worldY, wall_mode))
+        	if(board.check_wall_placement(pointer.worldX, pointer.worldY, wall_mode) && players[turn%player_num].wall_count != 0)
         	{
         		board.add_wall(pointer.worldX, pointer.worldY, wall_mode);
         		var new_x = (Math.round(pointer.worldX/70)*70);
@@ -131,6 +122,8 @@ function create ()
         		{
         			new_wall.angle = 90;
         		}
+        		players[turn%player_num].wall_count--;
+        		turn++; 
         	}
 
         	/*
