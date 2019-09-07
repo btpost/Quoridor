@@ -7,9 +7,11 @@ This is a simple web app that can be used to play the game Quoridor. Information
 * Pawn Movement
 * Wall Placement
 * Pawn's detect wall collisions
+* Two players local only
 
 ### TODO
-* Set wall placement limit for each player
 * Check win conditions
 * Snazzy Animations
 * Computer Players
+* 3 or 4 player games
+* Online Play
