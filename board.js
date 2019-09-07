@@ -8,8 +8,7 @@ class Board {
 			var row = new Array(9);
 			for(var j = 0; j < 9; j++)
 			{
-				row[j] = new Square({scene: config.scene, x:config.x, y:config.y
-									 arr_x:j, arr_y:i});
+				row[j] = new Square({scene: config.scene, x:config.x, y:config.y});
 			}
 			squares[i] = row;
 		}
