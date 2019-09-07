@@ -16,18 +16,21 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 		var arr_x = Math.floor(x/70);
 		var arr_y = Math.floor(y/70);
 
-		console.log(arr_x, arr_y);
+		
 		var new_square = this.board.get_square(arr_x, arr_y);
 		if(Math.abs(new_square.arr_x - this.square.arr_x) <= 1 && Math.abs(new_square.arr_y - this.square.arr_y) <= 1 && 
 					Math.abs(new_square.arr_x - this.square.arr_x)+Math.abs(new_square.arr_y - this.square.arr_y) <= 1)
 		{
+			console.log('Checking for blocked path');
 			console.log(this.square.block_array);
 			
-			if(new_square.y > this.square.y)
+			if(new_square.y < this.square.y)
 			{
+
 				console.log(this.square.block_array);
 				if(!(this.square.blocked(0)))
 				{
+					console.log('path not blocked (top)');
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -37,11 +40,12 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 				}
 				console.log('blocked on top');
 			}
-			else if (new_square.y < this.square.y)
+			else if (new_square.y > this.square.y)
 			{
 				console.log(this.square.block_array);
 				if(!(this.square.blocked(1)))
 				{
+					console.log('path not blocked (bottom)');
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -56,6 +60,7 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 				console.log(this.square.block_array);
 				if(!(this.square.blocked(2)))
 				{
+					console.log('path not blocked (left)');
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
@@ -70,6 +75,7 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 				console.log(this.square.block_array);
 				if(!(this.square.blocked(3)))
 				{
+					console.log('path not blocked (right)');
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;

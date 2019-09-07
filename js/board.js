@@ -90,6 +90,7 @@ export class Board {
 			b_left.block_right();
 			t_right.block_left();
 			b_right.block_left();
+			console.log(t_left.block_array);
 		}
 		else if (wall_mode === 2)
 		{
@@ -97,6 +98,7 @@ export class Board {
 			t_right.block_down();
 			b_left.block_up();
 			b_right.block_up();
+			console.log(t_left.block_array);
 		}
 	}
 }

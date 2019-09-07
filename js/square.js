@@ -30,7 +30,11 @@ export class Square extends Phaser.GameObjects.Image {
 	}
 
 	blocked (i) {
-		return this.blocked_sides[i];
+		if(this.blocked_sides[i] == 1)
+		{
+			return true;
+		}
+		return false;
 	}
 
 }
