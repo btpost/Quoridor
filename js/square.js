@@ -9,9 +9,13 @@ export class Square extends Phaser.GameObjects.Image {
 		this.arr_y = Math.floor(config.y/70);
 		// Add array for keeping track of which sides of the square are blocked
 		this.blocked_sides = new Array(4).fill(0);
+		this.has_pawn = false;
+
 
 		// Add the square to the screen
 		config.scene.add.existing(this);
+
+
 	}
 	// Methods for blocking each side of the square
 	block_up() {
@@ -30,6 +34,8 @@ export class Square extends Phaser.GameObjects.Image {
 	get block_array (){
 		return this.blocked_sides;
 	}
+
+	set hasPawn()
 
 	blocked (i) {
 		if(this.blocked_sides[i] == 1)

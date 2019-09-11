@@ -88,6 +88,9 @@ function create ()
     // Create a local variable for the current scene to pass into the event handler below
     var _this = this;
 
+
+
+
     // Create an event handler for mouse input 
     this.input.on('pointerdown', function (pointer) {
         // Change wall display state on right click
@@ -104,7 +107,7 @@ function create ()
         	}
         } // Move pawn if not in wall mode
         else if (wall_mode === 0)
-        {
+        {   
         	if(players[turn%player_num].pawn.move(pointer.worldX, pointer.worldY))
         	{
         		turn++;

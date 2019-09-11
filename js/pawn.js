@@ -9,6 +9,7 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 		this.arr_x = Math.floor(config.x/70);
 		this.arr_y = Math.floor(config.y/70);
 		this.square = config.board.get_square(this.arr_x, this.arr_y);
+		this.square.has_pawn = true;
 		this.board = config.board;
 
 		config.scene.add.existing(this);
@@ -17,38 +18,41 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 	// Check to see if a valid space was clicked. If so, move the pawn to the space.
 	move (x, y) {
 		// Convert the input coords to array coords
-		var arr_x = Math.floor(x/70);
-		var arr_y = Math.floor(y/70);
+		var arr_x = Math.floor((x)/70);
+		var arr_y = Math.floor((y)/70);
+		var new_square = this.board.get_square(arr_x, arr_y);
 
 		// Check to see if the square clicked is 1 space up, down, left, or right.
 		if(Math.abs(arr_x - this.square.arr_x) <= 1 && Math.abs(arr_y - this.square.arr_y) <= 1 && 
-					Math.abs(arr_x - this.square.arr_x)+Math.abs(arr_y - this.square.arr_y) <= 1)
+					Math.abs(arr_x - this.square.arr_x)+Math.abs(arr_y - this.square.arr_y) <= 1 && !(new_square.has_pawn))
 		{
-			
+			console.log("Valid move");
 			// Check to see if the current square is block in the direction of the new square
 			// if it isn't blocked, set the new square to this pawn's current square
 
 			// Checking for moving up
-			if(arr_y < this.square.y)
+			if(arr_y < this.square.arr_y)
 			{
 				if(!(this.square.blocked(0)))
-				{
-					var new_square = this.board.get_square(arr_x, arr_y);
+				{	
+					this.square.has_pawn = false;
 					this.square = new_square;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
 					this.x = new_square.x;
 					this.y = new_square.y;
+					this.square.has_pawn = true;
 					return true;
 				}
 			}
 			// Checking for moving down
-			else if (arr_y > this.square.y)
+			else if (arr_y > this.square.arr_y)
 			{
 				if(!(this.square.blocked(1)))
 				{
-					var new_square = this.board.get_square(arr_x, arr_y);
+					this.square.has_pawn = false;
 					this.square = new_square;
+					this.square.has_pawn = true;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
 					this.x = new_square.x;
@@ -57,12 +61,13 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 				}
 			}
 			// Checking for moving left
-			else if (arr_x < this.square.x)
+			else if (arr_x < this.square.arr_x)
 			{
 				if(!(this.square.blocked(2)))
 				{
-					var new_square = this.board.get_square(arr_x, arr_y);
+					this.square.has_pawn = false;
 					this.square = new_square;
+					this.square.has_pawn = true;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
 					this.x = new_square.x;
@@ -71,12 +76,13 @@ export class Pawn extends Phaser.GameObjects.Sprite {
 				}
 			}
 			// Checking for moving right
-			else if (arr_x > this.square.x)
+			else if (arr_x > this.square.arr_x)
 			{
 				if(!(this.square.blocked(3)))
 				{
-					var new_square = this.board.get_square(arr_x, arr_y);
+					this.square.has_pawn = false;
 					this.square = new_square;
+					this.square.has_pawn = true;
 					this.arr_x = new_square.arr_x;
 					this.arr_y = new_square.arr_y;
 					this.x = new_square.x;
